@@ -1,0 +1,37 @@
+apply plugin: 'groovy'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+
+defaultTasks 'clean', 'build'
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    groovy 'org.codehaus.groovy:groovy:1.8.5'
+    
+    compile group: 'org.beedom', name: 'dslforge', version: '1.0'
+    
+    compile group: 'org.seleniumhq.selenium.client-drivers', name: 'selenium-java-client-driver', version: '1.0.1', transitive: false
+    compile group: 'org.seleniumhq.selenium', name: 'selenium-server', version: '2.0a7', transitive: false
+    compile group: 'org.seleniumhq.selenium', name: 'selenium-remote-common', version: '2.0a7', transitive: false
+    compile 'org.seleniumhq.selenium:selenium-common:2.0a7'
+    compile 'org.mortbay.jetty:servlet-api-2.5:6.1.9'
+
+    testCompile 'junit:junit-dep:4.+'
+}
+
+
+task makeDirs(description : 'make all dirs for project setup') << {
+    def sources = [sourceSets.main, sourceSets.test]
+    sources*.allSource*.srcDirs.flatten().each { File srcDir ->
+        println "making $srcDir"
+        srcDir.mkdirs()
+    } 
+}
+
+task wrap(type : Wrapper, description : "create a gradlew") {
+    gradleVersion = '1.0-milestone-6'	
+}
